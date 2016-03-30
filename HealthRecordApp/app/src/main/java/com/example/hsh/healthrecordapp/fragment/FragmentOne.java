@@ -80,6 +80,7 @@ public class FragmentOne extends Fragment {
         deleteBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                result = dbAdapter.fetchAll();
                 result.moveToLast();
                 listViewAdapter.remove(listViewAdapter.getCount()-1);
                 dbAdapter.delete(result.getShort(0));
@@ -105,6 +106,7 @@ public class FragmentOne extends Fragment {
         result.moveToFirst();
 
         while(!result.isAfterLast()){
+            Log.i(TAG, "id = " + result.getString(0));
             listViewAdapter.addItem(result.getString(1), result.getString(2), "", "");
             result.moveToNext();
         }
