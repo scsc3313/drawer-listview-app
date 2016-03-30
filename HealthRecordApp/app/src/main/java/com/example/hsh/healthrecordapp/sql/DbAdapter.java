@@ -21,12 +21,10 @@ public class DbAdapter {
 
     private DatabaseHelper mDbHelper;
     private SQLiteDatabase mDb;
-
     /**
      *
      * Database creation sql statement
      */
-
     private static final String DATABASE_NAME = "data.db";
     private static final String DATABASE_TABLE = "health";
     private static final int DATABASE_VERSION = 2;

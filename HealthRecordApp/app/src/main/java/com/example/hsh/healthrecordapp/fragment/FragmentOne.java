@@ -80,9 +80,9 @@ public class FragmentOne extends Fragment {
         deleteBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                int position = listViewAdapter.getCount()-1;
-                listViewAdapter.remove(position);
-                dbAdapter.delete(position);
+                result.moveToLast();
+                listViewAdapter.remove(listViewAdapter.getCount()-1);
+                dbAdapter.delete(result.getShort(0));
             }
         });
 //        ivIcon = (ImageView) view.findViewById(R.id.frag1_icon);
