@@ -27,7 +27,7 @@ public class DbAdapter {
      * Database creation sql statement
      */
 
-    private static final String DATABASE_NAME = "data";
+    private static final String DATABASE_NAME = "data.db";
     private static final String DATABASE_TABLE = "health";
     private static final int DATABASE_VERSION = 2;
     private final Context mCtx;
@@ -65,7 +65,9 @@ public class DbAdapter {
 
     public DbAdapter open() throws SQLException {
         mDbHelper = new DatabaseHelper(mCtx);
+        Log.e(TAG, mDbHelper.toString());
         mDb = mDbHelper.getWritableDatabase();
+        Log.e(TAG, mDb.toString());
         return this;
     }
 

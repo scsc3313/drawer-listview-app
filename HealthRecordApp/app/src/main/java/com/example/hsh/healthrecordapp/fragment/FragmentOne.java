@@ -1,8 +1,10 @@
 package com.example.hsh.healthrecordapp.fragment;
 
 
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.text.Editable;
@@ -16,6 +18,7 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.hsh.healthrecordapp.R;
@@ -23,7 +26,9 @@ import com.example.hsh.healthrecordapp.model.ListData;
 import com.example.hsh.healthrecordapp.sql.DbAdapter;
 
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -34,10 +39,13 @@ public class FragmentOne extends Fragment {
     private ListViewAdapter listViewAdapter;
     private Button addBtn, deleteBtn;
     private Cursor result;
+    private TextView todayDate;
 
     public static final String IMAGE_RESOURCE_ID = "iconResourceID";
     public static final String ITEM_NAME = "itemName";
     private static final String TAG = "FragmentOne";
+
+    private String todayDateString;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -49,8 +57,9 @@ public class FragmentOne extends Fragment {
         listView.setAdapter(listViewAdapter);
         addBtn = (Button) view.findViewById(R.id.addBtn);
         deleteBtn = (Button) view.findViewById(R.id.deleteBtn);
+        todayDate = (TextView) view.findViewById(R.id.todayDate);
 
-        DbAdapter dbAdapter = new DbAdapter(getActivity().getApplicationContext());
+        final DbAdapter dbAdapter = new DbAdapter(getActivity().getApplicationContext());
 
         try {
             dbAdapter.open();
@@ -58,6 +67,8 @@ public class FragmentOne extends Fragment {
             e.printStackTrace();
             Log.e(TAG, "error" + e.toString());
         }
+        todayDateString = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+        todayDate.setText(todayDateString);
 
         addBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -69,7 +80,9 @@ public class FragmentOne extends Fragment {
         deleteBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                listViewAdapter.remove(listViewAdapter.getCount()-1);
+                int position = listViewAdapter.getCount()-1;
+                listViewAdapter.remove(position);
+                dbAdapter.delete(position);
             }
         });
 //        ivIcon = (ImageView) view.findViewById(R.id.frag1_icon);
@@ -85,6 +98,7 @@ public class FragmentOne extends Fragment {
 //                Log.e(TAG, "fab is Onclicked!!!");
 //            }
 //        });
+
         //ListView
         dbAdapter.create("스쿼트", "40");
         result = dbAdapter.fetchAll();
@@ -97,7 +111,6 @@ public class FragmentOne extends Fragment {
         if(result.getCount() < 5)
             for(int i = 0 ; i < 3; i++)
                 listViewAdapter.addItem("","","","");
-
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -174,6 +187,12 @@ public class FragmentOne extends Fragment {
             holder.weightEdit.setText(mData.weightEdit);
             holder.setEdit.setText(mData.setEdit);
             holder.countEdit.setText(mData.countEdit);
+            holder.button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    DialogSelectOption();
+                }
+            });
 
             return view;
         }
@@ -227,5 +246,25 @@ public class FragmentOne extends Fragment {
         public void afterTextChanged(Editable editable) {
 
         }
+    }
+
+    private void DialogSelectOption() {
+        final String items[] = { "item1", "item2", "item3" };
+        AlertDialog.Builder ab = new AlertDialog.Builder(getActivity());
+        ab.setTitle("Title");
+        ab.setSingleChoiceItems(items, 0, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                // 각 리스트를 선택했을때
+            }
+        }).setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                // OK 버튼 클릭시 , 여기서 선택한 값을 메인 Activity 로 넘기면 된다.
+            }
+        }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                // Cancel 버튼 클릭시
+            }
+        });
+        ab.show();
     }
 }
