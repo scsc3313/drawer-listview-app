@@ -74,6 +74,7 @@ public class FragmentOne extends Fragment {
             @Override
             public void onClick(View view) {
                 listViewAdapter.addItem("","","","");
+                dbAdapter.create("","");
             }
         });
 
@@ -81,24 +82,13 @@ public class FragmentOne extends Fragment {
             @Override
             public void onClick(View view) {
                 result = dbAdapter.fetchAll();
-                result.moveToLast();
-                listViewAdapter.remove(listViewAdapter.getCount()-1);
-                dbAdapter.delete(result.getShort(0));
+                if(result.getCount() != 0){
+                    result.moveToLast();
+                    listViewAdapter.remove(listViewAdapter.getCount()-1);
+                    dbAdapter.delete(result.getShort(0));
+                }
             }
         });
-//        ivIcon = (ImageView) view.findViewById(R.id.frag1_icon);
-//        tvItemName = (TextView) view.findViewById(R.id.frag1_text);
-//
-//        tvItemName.setText(getArguments().getString(ITEM_NAME));
-//        ivIcon.setImageDrawable(view.getResources().getDrawable(
-//                getArguments().getInt(IMAGE_RESOURCE_ID)));
-//        FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.fab);
-//        fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Log.e(TAG, "fab is Onclicked!!!");
-//            }
-//        });
 
         //ListView
         dbAdapter.create("스쿼트", "40");
@@ -110,9 +100,10 @@ public class FragmentOne extends Fragment {
             listViewAdapter.addItem(result.getString(1), result.getString(2), "", "");
             result.moveToNext();
         }
-        if(result.getCount() < 5)
-            for(int i = 0 ; i < 3; i++)
-                listViewAdapter.addItem("","","","");
+        if(result.getCount() < 5){
+            listViewAdapter.addItem("","","","");
+            dbAdapter.create("","");
+        }
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
