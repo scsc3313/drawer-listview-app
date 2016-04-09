@@ -32,7 +32,7 @@ public class DbAdapter {
 
     private static final String DATABASE_CREATE = "create table "
             + DATABASE_TABLE + " ("
-            + KEY_ROWID + " integer primary key autoincrement, "
+            + KEY_ROWID + " integer primary key, "
             + KEY_NAME  + " text not null, "
             + KEY_WEIGHT+ " text not null);";
 
@@ -73,15 +73,17 @@ public class DbAdapter {
         mDbHelper.close();
     }
 
-    public long create(String name, String weight) {
+    public long create(int id, String name, String weight) {
         ContentValues initialValues = new ContentValues();
+        initialValues.put(KEY_ROWID, id);
         initialValues.put(KEY_NAME, name);
         initialValues.put(KEY_WEIGHT, weight);
+        Log.i(TAG, "Create id : " + id + " name : " + name + " weight : " + weight);
         return mDb.insert(DATABASE_TABLE, null, initialValues);
     }
 
     public boolean delete(long rowId) {
-        Log.i("Delete called", "value__" + rowId);
+        Log.i(TAG, "Delete  id : " + rowId);
         return mDb.delete(DATABASE_TABLE, KEY_ROWID + "=" + rowId, null) > 0;
     }
 
@@ -101,9 +103,42 @@ public class DbAdapter {
 
     public boolean update(long rowId, String name, String weight) {
         ContentValues args = new ContentValues();
+//        String attr;
+//        switch (type){
+//            case 0 :
+//                attr = KEY_NAME;
+//                break;
+//            case 1 :
+//                attr = KEY_WEIGHT;
+//                break;
+//            default:
+//                attr = "";
+//                try {
+//                    throw new Exception("type is not null");
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+//                break;
+//        }
+        ++rowId;
         args.put(KEY_NAME, name);
         args.put(KEY_WEIGHT, weight);
-        return mDb.update(DATABASE_TABLE, args, KEY_ROWID + "=" + rowId, null) > 0;
+        Log.i(TAG, "Update rowId : " + rowId +" KEY_NAME : " + name + " KEY_WEIGHT : " +weight);
+        return mDb.update(DATABASE_TABLE, args, KEY_ROWID + " = " + rowId, null) > 0;
+    }
+
+    public String printData() {
+        String str = "";
+        Cursor cursor = mDb.rawQuery("select * from health", null);
+        while(cursor.moveToNext()) {
+            str += "id : " + cursor.getInt(0)
+                    + "name : "
+                    + cursor.getString(1)
+                    + ", weight : "
+                    + cursor.getString(2)
+                    + "\n";
+        }
+        return str;
     }
 
 
