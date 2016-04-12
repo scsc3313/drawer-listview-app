@@ -14,9 +14,11 @@ import java.sql.SQLException;
  */
 public class DbAdapter {
 
+    public static final String KEY_ROWID = "_id";
     public static final String KEY_NAME = "name";
     public static final String KEY_WEIGHT = "weight";
-    public static final String KEY_ROWID = "_id";
+    public static final String KEY_SET = "_set";
+    public static final String KEY_COUNT = "count";
     private static final String TAG = "DbAdapter";
 
     private DatabaseHelper mDbHelper;
@@ -34,7 +36,9 @@ public class DbAdapter {
             + DATABASE_TABLE + " ("
             + KEY_ROWID + " integer primary key, "
             + KEY_NAME  + " text not null, "
-            + KEY_WEIGHT+ " text not null);";
+            + KEY_WEIGHT  + " text not null, "
+            + KEY_SET  + " integer not null, "
+            + KEY_COUNT+ " text not null);";
 
 
     private static class DatabaseHelper extends SQLiteOpenHelper {
@@ -78,6 +82,8 @@ public class DbAdapter {
         initialValues.put(KEY_ROWID, id);
         initialValues.put(KEY_NAME, name);
         initialValues.put(KEY_WEIGHT, weight);
+        initialValues.put(KEY_SET, 0);
+        initialValues.put(KEY_SET, 0);
         Log.i(TAG, "Create id : " + id + " name : " + name + " weight : " + weight);
         return mDb.insert(DATABASE_TABLE, null, initialValues);
     }

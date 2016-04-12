@@ -96,7 +96,7 @@ public class FragmentOne extends Fragment {
             public void onClick(View view) {
                 //listViewAdapter에 추가
                 ++rowId;
-                listViewAdapter.addItem(String.valueOf(rowId), "", "", "", rowId);
+                listViewAdapter.addItem("", "", 0, 0, rowId);
                 //sqlite에 추가
                 dbAdapter.create(rowId, "", "");
             }
@@ -118,7 +118,8 @@ public class FragmentOne extends Fragment {
         Log.i(TAG, "Result print : " + result.toString());
         if (result.moveToFirst()) {
             while (!result.isAfterLast()) {
-                listViewAdapter.addItem(result.getString(1), result.getString(2), "", "", result.getShort(0));
+                int avg = getAvg();
+                listViewAdapter.addItem(result.getString(1), result.getString(2), result.getInt(3) , avg , result.getShort(0));
                 Log.i(TAG, "resultPrint rowId : " + result.getShort(0));
                 result.moveToNext();
             }
@@ -127,6 +128,17 @@ public class FragmentOne extends Fragment {
         listViewAdapter.dataChange();
 
         return view;
+    }
+
+    private int getAvg() {
+        String countString = result.getString(4);
+        String[] countStrings = countString.split("");
+        int avg = 0;
+        for(String string : countStrings){
+            avg += Integer.valueOf(string);
+        }
+        avg /= countStrings.length;
+        return avg;
     }
 
     private class ListViewAdapter extends BaseAdapter {
@@ -165,8 +177,8 @@ public class FragmentOne extends Fragment {
                 view = inflater.inflate(R.layout.listview_item, null);
                 holder.nameEdit = (EditText) view.findViewById(R.id.nameEdit);
                 holder.weightEdit = (EditText) view.findViewById(R.id.weightEdit);
-                holder.setEdit = (EditText) view.findViewById(R.id.setEdit);
-                holder.countEdit = (EditText) view.findViewById(R.id.countEdit);
+                holder.setEdit = (TextView) view.findViewById(R.id.setTextView);
+                holder.countEdit = (TextView) view.findViewById(R.id.countTextView);
                 holder.button = (Button) view.findViewById(R.id.button);
 
 //                holder.setEdit.addTextChangedListener(new MyWatcher(i, SET));
@@ -189,8 +201,8 @@ public class FragmentOne extends Fragment {
 
             holder.nameEdit.setText(mData.getNameEdit());
             holder.weightEdit.setText(mData.getWeightEdit());
-            holder.setEdit.setText(mData.getSetEdit());
-            holder.countEdit.setText(mData.getCountEdit());
+            holder.setEdit.setText(mData.getSetTextView());
+            holder.countEdit.setText(mData.getCountTextView());
             holder.button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -201,12 +213,12 @@ public class FragmentOne extends Fragment {
             return view;
         }
 
-        public void addItem(String name, String weight, String set, String count, int id) {
+        public void addItem(String name, String weight, int set, int count, int id) {
             ListData addInfo = new ListData();
             addInfo.setNameEdit(name);
             addInfo.setWeightEdit(weight);
-            addInfo.setSetEdit(set);
-            addInfo.setCountEdit(count);
+            addInfo.setSetTextView(set);
+            addInfo.setCountTextView(count);
             addInfo.setId(id);
 
             arrayList.add(addInfo);

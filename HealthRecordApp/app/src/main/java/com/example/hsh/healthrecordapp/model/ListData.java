@@ -5,7 +5,8 @@ package com.example.hsh.healthrecordapp.model;
  */
 public class ListData {
 
-    private String nameEdit, weightEdit, setEdit, countEdit;
+    private String nameEdit, weightEdit;
+    private int setTextView, countTextView;
     private int id;
 
     public String getNameEdit() {
@@ -24,20 +25,20 @@ public class ListData {
         this.weightEdit = weightEdit;
     }
 
-    public String getSetEdit() {
-        return setEdit;
+    public int getSetTextView() {
+        return setTextView;
     }
 
-    public void setSetEdit(String setEdit) {
-        this.setEdit = setEdit;
+    public void setSetTextView(int setTextView) {
+        this.setTextView = setTextView;
     }
 
-    public String getCountEdit() {
-        return countEdit;
+    public int getCountTextView() {
+        return countTextView;
     }
 
-    public void setCountEdit(String countEdit) {
-        this.countEdit = countEdit;
+    public void setCountTextView(int countTextView) {
+        this.countTextView = countTextView;
     }
 
     public int getId() {
